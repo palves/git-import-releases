@@ -7,10 +7,22 @@ function usage () {
         "usage: $0 [-h] [--package-list FILE] [--packages-dir PATH]"
 }
 
+function make_absolute()
+{
+    file=$1
+
+    case $file in
+	[[\\/]]* | ?:[[\\/]]* )
+	    echo "$file" ;;
+	*) # Relative name.
+	    echo $(pwd)/$file ;;
+    esac
+}
+
 while [ $# -gt 0 ]
 do
     case "$1" in
-        --package-list) package_list_file="$2"; shift ;;
+        --package-list) package_list="$2"; shift ;;
         --packages-dir) packages_dir="$2"; shift ;;
         -h)
             usage 1
@@ -24,7 +36,7 @@ do
     shift
 done
 
-if [ "x$package_list_file" == "x" ]; then
+if [ "x$package_list" == "x" ]; then
     usage 2
     exit 1;
 fi
@@ -34,9 +46,8 @@ if [ "x$packages_dir" == "x" ]; then
     exit 1;
 fi
 
-package_list=`cat $package_list_file`
-
 # Make absolute.
+package_list=$(make_absolute "$package_list")
 packages_dir=$(cd $packages_dir; pwd)
 
 rm -rf src
@@ -65,7 +76,6 @@ cleandir()
     done
 }
 
-echo "$package_list" | \
 while read line; do
     [ -z "$line" ] && continue
 
@@ -123,4 +133,4 @@ while read line; do
     git add -A > /dev/null
     git commit -m "$tag" --date "$date" --author="$tag <gdb@fsf.org>" > /dev/null
     git tag "$tag" > /dev/null
-done
+done < $package_list
