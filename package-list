@@ -1,0 +1,51 @@
+# Multiple releases on a single line means unpack all and do a
+# single commit.
+
+gdb-2.4+.aux.coff.tar.bz2
+gdb-2.5.1.tar.bz2
+gdb-2.5.2.tar.bz2
+gdb-2.5.3.tar.bz2
+gdb-2.8.tar.bz2
+gdb-2.8.1.tar.bz2
+gdb-3.1.tar.bz2
+gdb-3.3.tar.bz2
+gdb-3.4.tar.bz2
+gdb-3.5.tar.bz2
+gdb-3.93.tar.bz2
+gdb-3.95.tar.bz2
+gdb-3.98.tar.bz2
+gdb-4.0.1.tar.bz2
+gdb-4.1.tar.bz2
+gdb-4.2.tar.bz2
+gdb-4.3.tar.bz2
+gdb-4.4.tar.bz2
+gdb-4.5.tar.bz2
+gdb-4.6.tar.bz2
+gdb-4.7.tar.bz2
+gdb-4.8.tar.bz2
+gdb-4.9.tar.bz2
+gdb-4.10.pl1.tar.bz2 gdb-4.10-testsuite.tar.bz2
+gdb-4.11.tar.bz2 gdb-4.11-testsuite.tar.bz2
+gdb-4.12.tar.bz2 gdb-4.12-testsuite.tar.bz2
+gdb-4.13.tar.bz2 gdb-4.13-testsuite.tar.bz2
+gdb-4.14.tar.bz2 gdb-4.14-testsuite.tar.bz2
+#gdb-4.15.1.tar.bz2
+gdbtk-4.15.1.tar.bz2 gdb-4.15.1-testsuite.tar.bz2
+gdbtk-960201.tar.bz2
+gdbtk-960229.tar.bz2
+#gdb-4.16.tar.bz2
+gdbtk-4.16.tar.bz2 gdb-4.16-testsuite.tar.bz2
+gdbtk-960616.tar.bz2
+gdbtk-960708.tar.bz2
+gdb-4.17.tar.bz2
+gdb-4.18.tar.bz2 gdb-4.18-testsuite.tar.bz2
+# This is a tar of the state of cvs at the first check in that
+# includes bfd.
+gdb-19990503-cvs-import.tar.gz
+
+# This code is mostly in CVS, although these tarballs include some
+# bits of cygnus specific changes not in CVS, and also miss some files
+# that exist only in CVS.
+#gdb-19990707-pre-reformat.tar.bz2
+#gdb-19990707-post-reformat.tar.bz2
+#insight-19990727.tar.bz2

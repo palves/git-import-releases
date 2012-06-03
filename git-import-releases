@@ -1,0 +1,130 @@
+#!/bin/bash
+
+set -e
+
+function usage () {
+    echo >&$1 \
+        "usage: $0 [-h] [--package-list FILE] [--packages-dir PATH]"
+}
+
+xflag=off
+path=
+while [ $# -gt 0 ]
+do
+    case "$1" in
+        --package-list) package_list_file="$2"; shift ;;
+        --packages-dir) packages_dir="$2"; shift ;;
+        -h)
+            usage 1
+            exit 0;;
+        --)     shift; break;;
+        -*)
+            usage 2
+            exit 1;;
+        *)  break;;     # terminate while loop
+    esac
+    shift
+done
+
+if [ "x$package_list_file" == "x" ]; then
+    usage 2
+    exit 1;
+fi
+
+if [ "x$packages_dir" == "x" ]; then
+    usage 2
+    exit 1;
+fi
+
+package_list=`cat $package_list_file`
+
+# Make absolute.
+packages_dir=$(cd $packages_dir; pwd)
+
+rm -rf src
+mkdir src
+
+cd src
+
+git init
+
+tar_opts="--strip-components=1"
+
+# Remove everything, including hidden files (.gdbinit, for example),
+# except .git.
+cleandir()
+{
+    # Remove everything from the previous version, including hidden
+    # files (.gdbinit, for example), except .git.
+    ls -A | while read file; do
+	case "$file" in
+	    .git)
+		;;
+	    *)
+		rm -rf $file
+		;;
+	esac
+    done
+}
+
+echo "$package_list" | \
+while read line; do
+    [ -z "$line" ] && continue
+
+    # Skip commented out packages.
+    ignore=false
+    case "$line" in
+	\#*)
+	    ignore=true
+	    ;;
+    esac
+
+    if $ignore ; then
+	continue
+    fi
+
+    echo "Importing $line"
+
+    # Remove everything, including hidden files (.gdbinit, for
+    # example), except .git.
+    cleandir
+
+    # Multiple releases on a single line means unpack all and do a
+    # single commit.
+
+    tag=""
+    for file in $line; do
+	case "$file" in
+	    *.tar.bz2)
+		tar jxf "$packages_dir/$file" "$tar_opts";
+		release=${file%%.tar.bz2}
+		;;
+	    *.tar.gz)
+		tar zxf "$packages_dir/$file" "$tar_opts";
+		release=${file%%.tar.gz}
+		;;
+	    *)
+		echo "unknown package format for $file" > 2
+		exit 1
+		;;
+	esac
+
+        # Record author date as the last release on the line's date,
+        # and author as the composed tag (the latter to make `git
+        # blame' easier to follow).
+	date=`stat -c %y "$packages_dir/$file"`
+
+	if [ "$tag" != "" ] ; then
+	    tag="$tag+$release"
+	else
+	    tag="$release"
+	fi
+    done
+
+    # -A automagically takes care of removing files that disappeared.
+    git add -A > /dev/null
+    git commit -m "$tag" --date "$date" --author="$tag <gdb@fsf.org>" > /dev/null
+    git tag "$tag" > /dev/null
+
+    prev_tag=""
+done

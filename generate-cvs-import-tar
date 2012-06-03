@@ -1,0 +1,6 @@
+#!/bin/bash
+
+git archive --format=tar.gz \
+    --prefix=19990503-cvs-import/ \
+    860acaebec6b57ce27e244cc02a58e6651a4b6c3 \
+    > gdb-19990503-cvs-import.tar.gz
