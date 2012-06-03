@@ -123,6 +123,4 @@ while read line; do
     git add -A > /dev/null
     git commit -m "$tag" --date "$date" --author="$tag <gdb@fsf.org>" > /dev/null
     git tag "$tag" > /dev/null
-
-    prev_tag=""
 done
