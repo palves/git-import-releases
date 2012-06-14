@@ -77,19 +77,11 @@ cleandir()
 }
 
 while read line; do
+    # Skip empty lines.
     [ -z "$line" ] && continue
 
-    # Skip commented out packages.
-    ignore=false
-    case "$line" in
-	\#*)
-	    ignore=true
-	    ;;
-    esac
-
-    if $ignore ; then
-	continue
-    fi
+    # Skip commented out lines.
+    [[ $line == \#* ]] && continue
 
     echo "Importing $line"
 
