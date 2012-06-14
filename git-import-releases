@@ -63,8 +63,6 @@ tar_opts="--strip-components=1"
 # except .git.
 cleandir()
 {
-    # Remove everything from the previous version, including hidden
-    # files (.gdbinit, for example), except .git.
     ls -A | while read file; do
 	case "$file" in
 	    .git)
